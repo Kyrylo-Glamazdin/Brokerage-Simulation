@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="20B29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="UserAvailableBalance" representedClassName="UserAvailableBalance" syncable="YES">
+        <attribute name="availableBalance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="UserInvestmentBalance" representedClassName="UserInvestmentBalance" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="investmentBalance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="UserPortfolioState" representedClassName="UserPortfolioState" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="stocks" attributeType="Transformable" valueTransformerName="" customClassName="PortfolioStock"/>
+    </entity>
+    <entity name="UserTotalBalance" representedClassName="UserTotalBalance" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="totalBalance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="UserTotalDepositedBalance" representedClassName="UserTotalDepositedBalance" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="totalDepositedBalance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <elements>
+        <element name="UserAvailableBalance" positionX="0" positionY="72" width="128" height="73"/>
+        <element name="UserInvestmentBalance" positionX="27" positionY="99" width="128" height="73"/>
+        <element name="UserPortfolioState" positionX="27" positionY="117" width="128" height="59"/>
+        <element name="UserTotalBalance" positionX="54" positionY="126" width="128" height="73"/>
+        <element name="UserTotalDepositedBalance" positionX="9" positionY="81" width="128" height="73"/>
+    </elements>
+</model>

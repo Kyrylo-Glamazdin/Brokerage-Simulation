@@ -1,0 +1,479 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DC08CBA825536B1C00009EB1 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBA625536B1C00009EB1 /* DataModel.xcdatamodeld */; };
+		DC08CBB425536C7700009EB1 /* UserAvailableBalance+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBAC25536C7700009EB1 /* UserAvailableBalance+CoreDataClass.swift */; };
+		DC08CBB525536C7700009EB1 /* UserAvailableBalance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBAD25536C7700009EB1 /* UserAvailableBalance+CoreDataProperties.swift */; };
+		DC08CBB625536C7700009EB1 /* UserTotalBalance+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBAE25536C7700009EB1 /* UserTotalBalance+CoreDataClass.swift */; };
+		DC08CBB725536C7700009EB1 /* UserTotalBalance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBAF25536C7700009EB1 /* UserTotalBalance+CoreDataProperties.swift */; };
+		DC08CBB825536C7700009EB1 /* UserInvestmentBalance+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBB025536C7700009EB1 /* UserInvestmentBalance+CoreDataClass.swift */; };
+		DC08CBB925536C7700009EB1 /* UserInvestmentBalance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBB125536C7700009EB1 /* UserInvestmentBalance+CoreDataProperties.swift */; };
+		DC08CBBC25538DE000009EB1 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC08CBBB25538DE000009EB1 /* Functions.swift */; };
+		DC29A22A2555BCE500EF553F /* UserTotalDepositedBalance+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29A2282555BCE500EF553F /* UserTotalDepositedBalance+CoreDataClass.swift */; };
+		DC29A22B2555BCE500EF553F /* UserTotalDepositedBalance+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29A2292555BCE500EF553F /* UserTotalDepositedBalance+CoreDataProperties.swift */; };
+		DC2B84B42560484400F2B6EE /* UserPortfolioState+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B84B22560484400F2B6EE /* UserPortfolioState+CoreDataClass.swift */; };
+		DC2B84B52560484400F2B6EE /* UserPortfolioState+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B84B32560484400F2B6EE /* UserPortfolioState+CoreDataProperties.swift */; };
+		DC2B84B825604CE700F2B6EE /* PortfolioStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B84B725604CE700F2B6EE /* PortfolioStock.swift */; };
+		DC48846F25758626005F68EB /* NoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC48846E25758626005F68EB /* NoResultsCell.xib */; };
+		DC50ADA82551C9930081682A /* DepositFundsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50ADA72551C9930081682A /* DepositFundsViewController.swift */; };
+		DC703C63256D9BCE00B5CA16 /* PortfolioStockTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC703C62256D9BCE00B5CA16 /* PortfolioStockTransformer.swift */; };
+		DC71233B2557410C00AF4593 /* SearchStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC71233A2557410C00AF4593 /* SearchStocksViewController.swift */; };
+		DC71233E255751E600AF4593 /* AvailableStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC71233D255751E600AF4593 /* AvailableStock.swift */; };
+		DC7ED7E12575C9EA0052E6FD /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7ED7E02575C9EA0052E6FD /* HudView.swift */; };
+		DC86BDE92550AA1700FC6A86 /* Investment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC86BDE82550AA1700FC6A86 /* Investment.swift */; };
+		DC86BDEC2550D14C00FC6A86 /* InvestmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC86BDEB2550D14C00FC6A86 /* InvestmentCell.swift */; };
+		DC86BDEF2550E0D600FC6A86 /* NoInvestmentsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC86BDEE2550E0D600FC6A86 /* NoInvestmentsCell.xib */; };
+		DCADDA1A255064C600B3507C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADDA19255064C600B3507C /* AppDelegate.swift */; };
+		DCADDA1C255064C600B3507C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADDA1B255064C600B3507C /* SceneDelegate.swift */; };
+		DCADDA1E255064C600B3507C /* InvestmentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCADDA1D255064C600B3507C /* InvestmentsViewController.swift */; };
+		DCADDA21255064C600B3507C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCADDA1F255064C600B3507C /* Main.storyboard */; };
+		DCADDA23255064C900B3507C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCADDA22255064C900B3507C /* Assets.xcassets */; };
+		DCADDA26255064C900B3507C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCADDA24255064C900B3507C /* LaunchScreen.storyboard */; };
+		DCADDA3125506F2000B3507C /* InvestmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCADDA3025506F2000B3507C /* InvestmentCell.xib */; };
+		DCAEA8A1255B211400284554 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEA8A0255B211400284554 /* StateController.swift */; };
+		DCB8185725607DAA00839BD4 /* IndividualStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB8185625607DA900839BD4 /* IndividualStockViewController.swift */; };
+		DCBAE6982570192900449B9E /* Candle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAE6972570192900449B9E /* Candle.swift */; };
+		DCBDCECA25618F260076DF90 /* StockPriceObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBDCEC925618F250076DF90 /* StockPriceObj.swift */; };
+		DCD979082561FD8A00258980 /* BuyStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD979072561FD8900258980 /* BuyStockViewController.swift */; };
+		DCD9790B2561FDBE00258980 /* SellStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD9790A2561FDBE00258980 /* SellStockViewController.swift */; };
+		DCE8527E2576BB0400168026 /* CompleteSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = DCE8527D2576BB0300168026 /* CompleteSound.caf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		DC08CBA725536B1C00009EB1 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		DC08CBAC25536C7700009EB1 /* UserAvailableBalance+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAvailableBalance+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DC08CBAD25536C7700009EB1 /* UserAvailableBalance+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAvailableBalance+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DC08CBAE25536C7700009EB1 /* UserTotalBalance+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserTotalBalance+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DC08CBAF25536C7700009EB1 /* UserTotalBalance+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserTotalBalance+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DC08CBB025536C7700009EB1 /* UserInvestmentBalance+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserInvestmentBalance+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DC08CBB125536C7700009EB1 /* UserInvestmentBalance+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserInvestmentBalance+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DC08CBBB25538DE000009EB1 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		DC29A2282555BCE500EF553F /* UserTotalDepositedBalance+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserTotalDepositedBalance+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DC29A2292555BCE500EF553F /* UserTotalDepositedBalance+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserTotalDepositedBalance+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DC2B84B22560484400F2B6EE /* UserPortfolioState+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserPortfolioState+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DC2B84B32560484400F2B6EE /* UserPortfolioState+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserPortfolioState+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DC2B84B725604CE700F2B6EE /* PortfolioStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioStock.swift; sourceTree = "<group>"; };
+		DC48846E25758626005F68EB /* NoResultsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultsCell.xib; sourceTree = "<group>"; };
+		DC50ADA72551C9930081682A /* DepositFundsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFundsViewController.swift; sourceTree = "<group>"; };
+		DC703C62256D9BCE00B5CA16 /* PortfolioStockTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioStockTransformer.swift; sourceTree = "<group>"; };
+		DC71233A2557410C00AF4593 /* SearchStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStocksViewController.swift; sourceTree = "<group>"; };
+		DC71233D255751E600AF4593 /* AvailableStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableStock.swift; sourceTree = "<group>"; };
+		DC7ED7E02575C9EA0052E6FD /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
+		DC86BDE82550AA1700FC6A86 /* Investment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investment.swift; sourceTree = "<group>"; };
+		DC86BDEB2550D14C00FC6A86 /* InvestmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentCell.swift; sourceTree = "<group>"; };
+		DC86BDEE2550E0D600FC6A86 /* NoInvestmentsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoInvestmentsCell.xib; sourceTree = "<group>"; };
+		DCADDA16255064C600B3507C /* MockInvestment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MockInvestment.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCADDA19255064C600B3507C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DCADDA1B255064C600B3507C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		DCADDA1D255064C600B3507C /* InvestmentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentsViewController.swift; sourceTree = "<group>"; };
+		DCADDA20255064C600B3507C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DCADDA22255064C900B3507C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DCADDA25255064C900B3507C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DCADDA27255064C900B3507C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCADDA3025506F2000B3507C /* InvestmentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InvestmentCell.xib; sourceTree = "<group>"; };
+		DCAEA8A0255B211400284554 /* StateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
+		DCB8185625607DA900839BD4 /* IndividualStockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndividualStockViewController.swift; sourceTree = "<group>"; };
+		DCBAE6972570192900449B9E /* Candle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Candle.swift; sourceTree = "<group>"; };
+		DCBDCEC925618F250076DF90 /* StockPriceObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockPriceObj.swift; sourceTree = "<group>"; };
+		DCD979072561FD8900258980 /* BuyStockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyStockViewController.swift; sourceTree = "<group>"; };
+		DCD9790A2561FDBE00258980 /* SellStockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellStockViewController.swift; sourceTree = "<group>"; };
+		DCE8527D2576BB0300168026 /* CompleteSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CompleteSound.caf; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DCADDA13255064C600B3507C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DCADDA0D255064C600B3507C = {
+			isa = PBXGroup;
+			children = (
+				DCE8527D2576BB0300168026 /* CompleteSound.caf */,
+				DC2B84B22560484400F2B6EE /* UserPortfolioState+CoreDataClass.swift */,
+				DC2B84B32560484400F2B6EE /* UserPortfolioState+CoreDataProperties.swift */,
+				DC29A2282555BCE500EF553F /* UserTotalDepositedBalance+CoreDataClass.swift */,
+				DC29A2292555BCE500EF553F /* UserTotalDepositedBalance+CoreDataProperties.swift */,
+				DC08CBAC25536C7700009EB1 /* UserAvailableBalance+CoreDataClass.swift */,
+				DC08CBAD25536C7700009EB1 /* UserAvailableBalance+CoreDataProperties.swift */,
+				DC08CBAE25536C7700009EB1 /* UserTotalBalance+CoreDataClass.swift */,
+				DC08CBAF25536C7700009EB1 /* UserTotalBalance+CoreDataProperties.swift */,
+				DC08CBB025536C7700009EB1 /* UserInvestmentBalance+CoreDataClass.swift */,
+				DC08CBB125536C7700009EB1 /* UserInvestmentBalance+CoreDataProperties.swift */,
+				DCADDA18255064C600B3507C /* MockInvestment */,
+				DCADDA17255064C600B3507C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DCADDA17255064C600B3507C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCADDA16255064C600B3507C /* MockInvestment.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCADDA18255064C600B3507C /* MockInvestment */ = {
+			isa = PBXGroup;
+			children = (
+				DCADDA19255064C600B3507C /* AppDelegate.swift */,
+				DCADDA1B255064C600B3507C /* SceneDelegate.swift */,
+				DCADDA1D255064C600B3507C /* InvestmentsViewController.swift */,
+				DCADDA1F255064C600B3507C /* Main.storyboard */,
+				DCADDA22255064C900B3507C /* Assets.xcassets */,
+				DCADDA24255064C900B3507C /* LaunchScreen.storyboard */,
+				DCADDA27255064C900B3507C /* Info.plist */,
+				DCADDA3025506F2000B3507C /* InvestmentCell.xib */,
+				DC86BDE82550AA1700FC6A86 /* Investment.swift */,
+				DC86BDEB2550D14C00FC6A86 /* InvestmentCell.swift */,
+				DC86BDEE2550E0D600FC6A86 /* NoInvestmentsCell.xib */,
+				DC50ADA72551C9930081682A /* DepositFundsViewController.swift */,
+				DC08CBA625536B1C00009EB1 /* DataModel.xcdatamodeld */,
+				DC08CBBB25538DE000009EB1 /* Functions.swift */,
+				DC71233A2557410C00AF4593 /* SearchStocksViewController.swift */,
+				DC71233D255751E600AF4593 /* AvailableStock.swift */,
+				DCAEA8A0255B211400284554 /* StateController.swift */,
+				DC2B84B725604CE700F2B6EE /* PortfolioStock.swift */,
+				DCB8185625607DA900839BD4 /* IndividualStockViewController.swift */,
+				DCBDCEC925618F250076DF90 /* StockPriceObj.swift */,
+				DCD979072561FD8900258980 /* BuyStockViewController.swift */,
+				DCD9790A2561FDBE00258980 /* SellStockViewController.swift */,
+				DC703C62256D9BCE00B5CA16 /* PortfolioStockTransformer.swift */,
+				DCBAE6972570192900449B9E /* Candle.swift */,
+				DC48846E25758626005F68EB /* NoResultsCell.xib */,
+				DC7ED7E02575C9EA0052E6FD /* HudView.swift */,
+			);
+			path = MockInvestment;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DCADDA15255064C600B3507C /* MockInvestment */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCADDA2A255064C900B3507C /* Build configuration list for PBXNativeTarget "MockInvestment" */;
+			buildPhases = (
+				DCADDA12255064C600B3507C /* Sources */,
+				DCADDA13255064C600B3507C /* Frameworks */,
+				DCADDA14255064C600B3507C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MockInvestment;
+			productName = MockInvestment;
+			productReference = DCADDA16255064C600B3507C /* MockInvestment.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DCADDA0E255064C600B3507C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1210;
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					DCADDA15255064C600B3507C = {
+						CreatedOnToolsVersion = 12.1;
+					};
+				};
+			};
+			buildConfigurationList = DCADDA11255064C600B3507C /* Build configuration list for PBXProject "MockInvestment" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DCADDA0D255064C600B3507C;
+			productRefGroup = DCADDA17255064C600B3507C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCADDA15255064C600B3507C /* MockInvestment */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DCADDA14255064C600B3507C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC86BDEF2550E0D600FC6A86 /* NoInvestmentsCell.xib in Resources */,
+				DCADDA3125506F2000B3507C /* InvestmentCell.xib in Resources */,
+				DCADDA26255064C900B3507C /* LaunchScreen.storyboard in Resources */,
+				DC48846F25758626005F68EB /* NoResultsCell.xib in Resources */,
+				DCADDA23255064C900B3507C /* Assets.xcassets in Resources */,
+				DCADDA21255064C600B3507C /* Main.storyboard in Resources */,
+				DCE8527E2576BB0400168026 /* CompleteSound.caf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DCADDA12255064C600B3507C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC08CBB825536C7700009EB1 /* UserInvestmentBalance+CoreDataClass.swift in Sources */,
+				DC2B84B52560484400F2B6EE /* UserPortfolioState+CoreDataProperties.swift in Sources */,
+				DCBAE6982570192900449B9E /* Candle.swift in Sources */,
+				DCAEA8A1255B211400284554 /* StateController.swift in Sources */,
+				DC08CBB925536C7700009EB1 /* UserInvestmentBalance+CoreDataProperties.swift in Sources */,
+				DC29A22B2555BCE500EF553F /* UserTotalDepositedBalance+CoreDataProperties.swift in Sources */,
+				DC08CBB625536C7700009EB1 /* UserTotalBalance+CoreDataClass.swift in Sources */,
+				DC703C63256D9BCE00B5CA16 /* PortfolioStockTransformer.swift in Sources */,
+				DC08CBBC25538DE000009EB1 /* Functions.swift in Sources */,
+				DC86BDE92550AA1700FC6A86 /* Investment.swift in Sources */,
+				DCD979082561FD8A00258980 /* BuyStockViewController.swift in Sources */,
+				DCB8185725607DAA00839BD4 /* IndividualStockViewController.swift in Sources */,
+				DCADDA1E255064C600B3507C /* InvestmentsViewController.swift in Sources */,
+				DCADDA1A255064C600B3507C /* AppDelegate.swift in Sources */,
+				DC08CBA825536B1C00009EB1 /* DataModel.xcdatamodeld in Sources */,
+				DC86BDEC2550D14C00FC6A86 /* InvestmentCell.swift in Sources */,
+				DC7ED7E12575C9EA0052E6FD /* HudView.swift in Sources */,
+				DC71233B2557410C00AF4593 /* SearchStocksViewController.swift in Sources */,
+				DC08CBB525536C7700009EB1 /* UserAvailableBalance+CoreDataProperties.swift in Sources */,
+				DC29A22A2555BCE500EF553F /* UserTotalDepositedBalance+CoreDataClass.swift in Sources */,
+				DCBDCECA25618F260076DF90 /* StockPriceObj.swift in Sources */,
+				DC08CBB725536C7700009EB1 /* UserTotalBalance+CoreDataProperties.swift in Sources */,
+				DC2B84B42560484400F2B6EE /* UserPortfolioState+CoreDataClass.swift in Sources */,
+				DC71233E255751E600AF4593 /* AvailableStock.swift in Sources */,
+				DCD9790B2561FDBE00258980 /* SellStockViewController.swift in Sources */,
+				DC50ADA82551C9930081682A /* DepositFundsViewController.swift in Sources */,
+				DC2B84B825604CE700F2B6EE /* PortfolioStock.swift in Sources */,
+				DCADDA1C255064C600B3507C /* SceneDelegate.swift in Sources */,
+				DC08CBB425536C7700009EB1 /* UserAvailableBalance+CoreDataClass.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		DCADDA1F255064C600B3507C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCADDA20255064C600B3507C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DCADDA24255064C900B3507C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCADDA25255064C900B3507C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DCADDA28255064C900B3507C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DCADDA29255064C900B3507C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DCADDA2B255064C900B3507C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ACC74YXWAU;
+				INFOPLIST_FILE = MockInvestment/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-c.MockInvestment";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCADDA2C255064C900B3507C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ACC74YXWAU;
+				INFOPLIST_FILE = MockInvestment/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-c.MockInvestment";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DCADDA11255064C600B3507C /* Build configuration list for PBXProject "MockInvestment" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCADDA28255064C900B3507C /* Debug */,
+				DCADDA29255064C900B3507C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCADDA2A255064C900B3507C /* Build configuration list for PBXNativeTarget "MockInvestment" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCADDA2B255064C900B3507C /* Debug */,
+				DCADDA2C255064C900B3507C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DC08CBA625536B1C00009EB1 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DC08CBA725536B1C00009EB1 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = DC08CBA725536B1C00009EB1 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = DCADDA0E255064C600B3507C /* Project object */;
+}

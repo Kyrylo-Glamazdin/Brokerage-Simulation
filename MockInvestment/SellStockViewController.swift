@@ -1,0 +1,196 @@
+//
+//  SellStockViewController.swift
+//  MockInvestment
+//
+//  Created by Kyrylo Glamazdin on 11/15/20.
+//
+
+import Foundation
+import UIKit
+import CoreData
+import AVFoundation
+
+class SellStockViewController: UIViewController {
+    
+    @IBOutlet weak var sellSharesLabel: UILabel!
+    @IBOutlet weak var marketPriceLabel: UILabel!
+    @IBOutlet weak var userSharesLabel: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var totalLabel: UILabel!
+    @IBOutlet weak var errorLabel: UILabel!
+    
+    var managedObjectContext: NSManagedObjectContext!
+    var stockObj: AvailableStock!
+    var currentStockPrice: StockPriceObj?
+    var userAvailableBalances = [UserAvailableBalance]()
+    var userInvestmentBalances = [UserInvestmentBalance]()
+    var userPortfolios = [UserPortfolioState]()
+    var numOfSharesInPortfolio: Int = 0
+    var audioPlayer = AVAudioPlayer()
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        sellSharesLabel.text! = "Sell " + stockObj.stockSymbol
+        if currentStockPrice != nil{
+            marketPriceLabel.text! = "Market price: $" + String(currentStockPrice!.currentPrice)
+        }
+        else {
+            marketPriceLabel.text! = "Market price: $0.00"
+        }
+
+        let sound = Bundle.main.path(forResource: "CompleteSound", ofType: "caf")
+        do {
+            if sound != nil {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
+            }
+        }
+        catch {
+            print(error)
+        }
+        
+        getPersonalFundsData()
+        afterDelay(0.6) {
+            self.textField.becomeFirstResponder()
+        }
+    }
+
+    func getPersonalFundsData() {
+        let fetchRequest1 = NSFetchRequest<UserAvailableBalance>()
+        let fetchRequest2 = NSFetchRequest<UserInvestmentBalance>()
+        let fetchRequest3 = NSFetchRequest<UserPortfolioState>()
+
+        let entity1 = UserAvailableBalance.entity()
+        fetchRequest1.entity = entity1
+        let entity2 = UserInvestmentBalance.entity()
+        fetchRequest2.entity = entity2
+        let entity3 = UserPortfolioState.entity()
+        fetchRequest3.entity = entity3
+
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        fetchRequest1.sortDescriptors = [sortDescriptor]
+        fetchRequest2.sortDescriptors = [sortDescriptor]
+        fetchRequest3.sortDescriptors = [sortDescriptor]
+
+        do {
+            userAvailableBalances = try managedObjectContext.fetch(fetchRequest1)
+            userInvestmentBalances = try managedObjectContext.fetch(fetchRequest2)
+            userPortfolios = try managedObjectContext.fetch(fetchRequest3)
+        }
+        catch {
+            fatalError("Error: \(error)")
+        }
+
+        let latestPortfolio = userPortfolios[0].stocks
+        for stock in latestPortfolio {
+            if stock.symbol == stockObj.stockSymbol {
+                userSharesLabel.text! = "You own " + String(stock.quantity) + " shares of " + stock.symbol
+                numOfSharesInPortfolio = stock.quantity
+                break
+            }
+        }
+
+    }
+    
+    
+    @IBAction func placeOrder(_ sender: Any) {
+        if let enteredSharesAmount = Double(textField.text!) {
+            if enteredSharesAmount == 0 || enteredSharesAmount > Double(numOfSharesInPortfolio){
+                errorLabel.text! = "Enter a valid amount of shares"
+                afterDelay(5) {
+                    self.errorLabel.text! = ""
+                }
+                return
+            }
+            if currentStockPrice != nil {
+                completeTransaction()
+            }
+            else {
+                errorLabel.text! = "Price error: Could not place your order"
+                afterDelay(5) {
+                    self.errorLabel.text! = ""
+                }
+            }
+        }
+        else {
+            errorLabel.text! = "Enter a valid amount of shares"
+            afterDelay(5) {
+                self.errorLabel.text! = ""
+            }
+        }
+    }
+    
+    func completeTransaction() {
+        let date = Date()
+        let enteredSharesAmount = Double(textField.text!)
+
+        let latestUserPortfolio = userPortfolios[0]
+        let availableBalance = UserAvailableBalance(context: managedObjectContext)
+        let investmentBalance = UserInvestmentBalance(context: managedObjectContext)
+        let userPortfolio = UserPortfolioState(context: managedObjectContext)
+
+        for stock in latestUserPortfolio.stocks {
+            if stock.symbol == stockObj.symbol {
+                if Int(enteredSharesAmount!) == stock.quantity {
+                    continue
+                }
+                else {
+                    let existingStock = stock
+                    existingStock.quantity = existingStock.quantity - Int(enteredSharesAmount!)
+                    userPortfolio.stocks.append(existingStock)
+                }
+            }
+            else {
+                userPortfolio.stocks.append(stock)
+            }
+        }
+        let totalTransactionCost = currentStockPrice!.currentPrice * enteredSharesAmount!
+        availableBalance.availableBalance = userAvailableBalances[0].availableBalance + totalTransactionCost
+        investmentBalance.investmentBalance = userInvestmentBalances[0].investmentBalance - totalTransactionCost
+
+        if userPortfolio.stocks.count == 0 {
+            userPortfolio.stocks = []
+        }
+        userPortfolio.date = date
+        availableBalance.date = date
+        investmentBalance.date = date
+
+        do {
+            try managedObjectContext.save()
+            postCompletionNotification()
+            self.textField.resignFirstResponder()
+            let hudView = HudView.hud(inView: view, animated: true)
+            hudView.text = "Done"
+            audioPlayer.play()
+            afterDelay(0.6){
+                hudView.hide()
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+        catch {
+            fatalError("Error: \(error)")
+        }
+    }
+    
+    @IBAction func enteredNumberOfSharesDidChange(_ sender: Any) {
+        if let enteredSharesAmount = Double(textField.text!) {
+            let newTransactionPrice = enteredSharesAmount * (currentStockPrice?.currentPrice ?? 0)
+           totalLabel.text! = "$" + String(format: "%.2f", newTransactionPrice)
+        }
+        else {
+            totalLabel.text! = "$0.00"
+        }
+    }
+    
+    
+    @IBAction func cancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func postCompletionNotification() {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "StockTransactionCompleted"), object: nil)
+    }
+}
