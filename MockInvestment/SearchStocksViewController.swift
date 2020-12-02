@@ -36,6 +36,9 @@ class SearchStocksViewController: UIViewController {
     
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         segmentedControlValue = sender.selectedSegmentIndex
+        if searchBarInput.count > 0 {
+            performLocalStockSearch()
+        }
     }
     
     func performLocalStockSearch(){

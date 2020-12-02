@@ -518,6 +518,9 @@ class InvestmentsViewController: UIViewController {
         if dailyChangeVal < 0 {
             userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
         }
+        else {
+            userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
+        }
         canToggleSegmentedControl = true
     }
     
@@ -649,6 +652,9 @@ extension InvestmentsViewController: UITableViewDelegate, UITableViewDataSource 
             cell.percentageChangeLabel.text = investment.percentageChange
             if investment.percentageChangeVal < 0 {
                 cell.percentageChangeLabel.textColor = UIColor.red
+            }
+            else {
+                cell.percentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
             }
             cell.sharesLabel.text = String(investment.shares) + " shares"
             if investment.shares == 1 {
