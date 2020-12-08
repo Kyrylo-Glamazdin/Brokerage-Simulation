@@ -1,0 +1,33 @@
+Animation rotation: https://stackoverflow.com/questions/9844925/uiview-infinite-360-degree-rotation-animation
+
+Saving & using user defaults: https://www.youtube.com/watch?v=HxVOahmfwz0&ab_channel=PaulHudson
+
+Passing data between view controllers: https://www.youtube.com/watch?v=7fbTHFH3tl4&ab_channel=TheSwiftGuy, https://www.youtube.com/watch?v=guSYMPaXLaw&&ab_channel=Archetapp, https://learnappmaking.com/pass-data-between-view-controllers-swift-how-to/
+
+Playing sound using AVAudioPlayer: https://codewithchris.com/avaudioplayer-tutorial/
+
+Implementing delegate protocol: https://useyourloaf.com/blog/quick-guide-to-swift-delegates/
+
+Using dispatchGroup (to wait for all API calls to finish): https://itnext.io/how-to-use-dispatchgroup-in-swift-4-2-similar-to-async-await-in-javascript-62a2ff04e51e, https://stackoverflow.com/questions/49376157/swift-dispatchgroup-notify-before-task-finish
+
+Decoding JSON arrays: https://stackoverflow.com/questions/55236976/how-to-retrieve-values-from-a-nested-json-swift
+
+Using Date object: https://developer.apple.com/documentation/foundation/date
+
+Rounding a Double value to 2 decimal places using String format: https://stackoverflow.com/questions/27338573/rounding-a-double-value-to-x-number-of-decimal-places-in-swift
+
+Firing an action when Textfield text changes: https://supereasyapps.com/blog/2015/7/24/how-to-get-uitextfield-text-changed-events-for-your-validation-logic-swift-tips-1
+
+String protocol for using substrings: https://stackoverflow.com/questions/32305891/index-of-a-substring-in-a-string-with-swift
+
+Using UIColor custom values: https://developer.apple.com/documentation/uikit/uicolor
+
+Using Notification Center in iOS: https://www.youtube.com/watch?v=Kr3G9C22_-Q&feature=emb_logo&ab_channel=iOSAcademy
+
+Encoding & decoding a transformable data type: https://www.raywenderlich.com/6733-nscoding-tutorial-for-ios-how-to-permanently-save-app-data, https://stackoverflow.com/questions/48256336/swift-and-coredata-with-custom-class-as-transformable-object
+
+Setting title of a UIButton: https://developer.apple.com/documentation/uikit/uibutton
+
+Looping through an array using indexes: https://stackoverflow.com/questions/24028421/how-to-iterate-a-loop-with-index-and-element-in-swift
+
+Passing data between tabs using StateController: https://matteomanferdini.com/how-ios-view-controllers-communicate-with-each-other/

@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Investment is the class used for displaying each individual stock present in user's portfolio in the tableView on InvestmentsViewController
 class Investment{
     var symbol = ""
     var percentageChange = ""

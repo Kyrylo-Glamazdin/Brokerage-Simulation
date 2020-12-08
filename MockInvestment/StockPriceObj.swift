@@ -5,16 +5,18 @@
 //  Created by Kyrylo Glamazdin on 11/15/20.
 //
 
+
+//This file is used for parsing stock price object provided by finnhub.io
 import Foundation
 
 class StockPriceObj: Codable {
 
-  var o: Double? = 0
-  var h: Double? = 0
-  var l: Double? = 0
-  var c: Double? = 0
-  var pc: Double? = 0
-  var t: Double? = 0
+  var o: Double? = 0 //open price
+  var h: Double? = 0 //high price
+  var l: Double? = 0 //low price
+  var c: Double? = 0 //close price
+  var pc: Double? = 0 //previous close
+  var t: Double? = 0 //timestamp
   
   var openPrice: Double {
     return o ?? 0

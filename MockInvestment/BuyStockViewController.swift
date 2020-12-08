@@ -10,13 +10,107 @@ import UIKit
 import CoreData
 import AVFoundation
 
+//This class is responsible for processing the transactions that simulate buying stocks and adding them to user's portfolio
 class BuyStockViewController: UIViewController {
+    //outlets
     @IBOutlet weak var buyStockLabel: UILabel!
     @IBOutlet weak var marketPriceLabel: UILabel!
     @IBOutlet weak var availableBalanceLabel: UILabel!
     @IBOutlet weak var numberOfSharesLabel: UITextField!
     @IBOutlet weak var estimatedCostLabel: UILabel!
+    
+    
     @IBAction func placeOrder(_ sender: Any) {
+        checkTransactionValidity()
+    }
+    
+    @IBOutlet weak var errorLabel: UILabel!
+    
+    var managedObjectContext: NSManagedObjectContext!
+    var stockObj: AvailableStock!
+    var currentStockPrice: StockPriceObj?
+    
+    //vars for local database fetches
+    var userAvailableBalances = [UserAvailableBalance]()
+    var userInvestmentBalances = [UserInvestmentBalance]()
+    var userPortfolios = [UserPortfolioState]()
+    
+    var audioPlayer = AVAudioPlayer() //audio player to play the transaction sound
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        buyStockLabel.text! = "Buy " + stockObj.stockSymbol
+        if currentStockPrice != nil{
+            marketPriceLabel.text! = "Market price: $" + String(currentStockPrice!.currentPrice)
+        }
+        else {
+            marketPriceLabel.text! = "Market price: $0.00"
+        }
+        
+        //load sound into audio player
+        let sound = Bundle.main.path(forResource: "CompleteSound", ofType: "caf")
+        do {
+            if sound != nil {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
+            }
+        }
+        catch {
+            print(error)
+        }
+        
+        getPersonalFundsData()
+        afterDelay(0.6) {
+            self.numberOfSharesLabel.becomeFirstResponder()
+        }
+    }
+    
+    //fetch personal balance and portfolio data from local database
+    func getPersonalFundsData() {
+        //create requests
+        let fetchRequest1 = NSFetchRequest<UserAvailableBalance>()
+        let fetchRequest2 = NSFetchRequest<UserInvestmentBalance>()
+        let fetchRequest3 = NSFetchRequest<UserPortfolioState>()
+        
+        let entity1 = UserAvailableBalance.entity()
+        fetchRequest1.entity = entity1
+        let entity2 = UserInvestmentBalance.entity()
+        fetchRequest2.entity = entity2
+        let entity3 = UserPortfolioState.entity()
+        fetchRequest3.entity = entity3
+        
+        //sort by date from newest to oldest
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        fetchRequest1.sortDescriptors = [sortDescriptor]
+        fetchRequest2.sortDescriptors = [sortDescriptor]
+        fetchRequest3.sortDescriptors = [sortDescriptor]
+        
+        //fetch data
+        do {
+            userAvailableBalances = try managedObjectContext.fetch(fetchRequest1)
+            userInvestmentBalances = try managedObjectContext.fetch(fetchRequest2)
+            userPortfolios = try managedObjectContext.fetch(fetchRequest3)
+        }
+        catch {
+            fatalError("Error: \(error)")
+        }
+        
+        if userAvailableBalances.count == 0 {
+            self.availableBalanceLabel.text! = "$0.00 Available"
+        }
+        else{
+            self.availableBalanceLabel.text! = "$" + String(format: "%.2f", userAvailableBalances[0].availableBalance) + " Available"
+        }
+    }
+    
+    //MARK: - Validate and process transaction
+    
+    //check if transaction is valid by checking the entered amount of shares and available balance.
+    //if transaction can be completed, process the transaction
+    func checkTransactionValidity() {
         if let enteredSharesAmount = Double(numberOfSharesLabel.text!) {
             if enteredSharesAmount == 0 {
                 errorLabel.text! = "Enter a valid amount of shares"
@@ -36,6 +130,7 @@ class BuyStockViewController: UIViewController {
                 else {
                     let latestBalance = userAvailableBalances[0]
                     if latestBalance.availableBalance >= requiredPurchaseBalance {
+                        //process transaction
                         completePurchase(totalTransactionCost: requiredPurchaseBalance)
                     }
                     else {
@@ -47,6 +142,7 @@ class BuyStockViewController: UIViewController {
                 }
             }
             else {
+                //this indicates an API issue, most likely exceeding API call limit. Try again in a minute
                 errorLabel.text! = "Price error: Could not place your order"
                 afterDelay(5) {
                     self.errorLabel.text! = ""
@@ -60,89 +156,20 @@ class BuyStockViewController: UIViewController {
             }
         }
     }
-    @IBOutlet weak var errorLabel: UILabel!
     
-    var managedObjectContext: NSManagedObjectContext!
-    var stockObj: AvailableStock!
-    var currentStockPrice: StockPriceObj?
-    var userAvailableBalances = [UserAvailableBalance]()
-    var userInvestmentBalances = [UserInvestmentBalance]()
-    var userPortfolios = [UserPortfolioState]()
-    var audioPlayer = AVAudioPlayer()
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        buyStockLabel.text! = "Buy " + stockObj.stockSymbol
-        if currentStockPrice != nil{
-            marketPriceLabel.text! = "Market price: $" + String(currentStockPrice!.currentPrice)
-        }
-        else {
-            marketPriceLabel.text! = "Market price: $0.00"
-        }
-        
-        let sound = Bundle.main.path(forResource: "CompleteSound", ofType: "caf")
-        do {
-            if sound != nil {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
-            }
-        }
-        catch {
-            print(error)
-        }
-        
-        getPersonalFundsData()
-        afterDelay(0.6) {
-            self.numberOfSharesLabel.becomeFirstResponder()
-        }
-    }
-    
-    func getPersonalFundsData() {
-        let fetchRequest1 = NSFetchRequest<UserAvailableBalance>()
-        let fetchRequest2 = NSFetchRequest<UserInvestmentBalance>()
-        let fetchRequest3 = NSFetchRequest<UserPortfolioState>()
-        
-        let entity1 = UserAvailableBalance.entity()
-        fetchRequest1.entity = entity1
-        let entity2 = UserInvestmentBalance.entity()
-        fetchRequest2.entity = entity2
-        let entity3 = UserPortfolioState.entity()
-        fetchRequest3.entity = entity3
-        
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
-        fetchRequest1.sortDescriptors = [sortDescriptor]
-        fetchRequest2.sortDescriptors = [sortDescriptor]
-        fetchRequest3.sortDescriptors = [sortDescriptor]
-        
-        do {
-            userAvailableBalances = try managedObjectContext.fetch(fetchRequest1)
-            userInvestmentBalances = try managedObjectContext.fetch(fetchRequest2)
-            userPortfolios = try managedObjectContext.fetch(fetchRequest3)
-        }
-        catch {
-            fatalError("Error: \(error)")
-        }
-        
-        if userAvailableBalances.count == 0 {
-            self.availableBalanceLabel.text! = "$0.00 Available"
-        }
-        else{
-            self.availableBalanceLabel.text! = "$" + String(format: "%.2f", userAvailableBalances[0].availableBalance) + " Available"
-        }
-    }
-    
+    //this method processes the transaction and adds stocks to user's portfolio
+    //@precondion: number of stocks entered is valid and @totalTransactionCost does not exceed user's available balance
     func completePurchase(totalTransactionCost: Double) {
         let date = Date()
         let enteredSharesAmount = Double(numberOfSharesLabel.text!)
         
+        //check if this is the first ever stock in user's portfolio
         if userPortfolios.count == 0 {
             let availableBalance = UserAvailableBalance(context: managedObjectContext)
             let investmentBalance = UserInvestmentBalance(context: managedObjectContext)
             let userPortfolio = UserPortfolioState(context: managedObjectContext)
             
+            //append the new stock
             let newStock = PortfolioStock()
             newStock.symbol = stockObj.stockSymbol
             newStock.name = stockObj.stockDescription
@@ -161,7 +188,7 @@ class BuyStockViewController: UIViewController {
             availableBalance.date = date
             investmentBalance.date = date
             
-            
+            //save the portfolio, show the animation, and play transaction completion sound
             do {
                 try managedObjectContext.save()
                 postCompletionNotification()
@@ -178,6 +205,7 @@ class BuyStockViewController: UIViewController {
                 fatalError("Error: \(error)")
             }
         }
+        //else is triggered when the user already has a portfolio history
         else {
             var stockAlreadyInPortfolio = false
             let latestUserPortfolio = userPortfolios[0]
@@ -185,6 +213,7 @@ class BuyStockViewController: UIViewController {
             let investmentBalance = UserInvestmentBalance(context: managedObjectContext)
             let userPortfolio = UserPortfolioState(context: managedObjectContext)
             for stock in latestUserPortfolio.stocks {
+                //check if this stock is already present in user's portfolio. if so, just increment its count
                 if stock.symbol == stockObj.stockSymbol {
                     stockAlreadyInPortfolio = true
                     let existingStock = stock
@@ -198,10 +227,12 @@ class BuyStockViewController: UIViewController {
                     availableBalance.date = date
                     investmentBalance.date = date
                 }
+                //append other existing stocks
                 else {
                     userPortfolio.stocks.append(stock)
                 }
             }
+            //if this stock is not yet in the portfolio, append it to @stocks without incrementing the existion stock count
             if !stockAlreadyInPortfolio {
                 let newStock = PortfolioStock()
                 newStock.symbol = stockObj.stockSymbol
@@ -217,6 +248,7 @@ class BuyStockViewController: UIViewController {
                 investmentBalance.date = date
             }
             
+            //save the portfolio, show the animation, and play transaction completion sound
             do {
                 try managedObjectContext.save()
                 postCompletionNotification()
@@ -235,6 +267,7 @@ class BuyStockViewController: UIViewController {
         }
     }
     
+    //when the number of entered shares changes, update the estimated price label
     @IBAction func numberOfEnteredSharesDidChange(_ sender: Any) {
         if let enteredSharesAmount = Double(numberOfSharesLabel.text!) {
             let newTransactionPrice = enteredSharesAmount * (currentStockPrice?.currentPrice ?? 0)
@@ -250,9 +283,8 @@ class BuyStockViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    //issue a notification indicating that the portfolio has been updated and other controllers must re-fetch data
     func postCompletionNotification() {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "StockTransactionCompleted"), object: nil)
     }
-    
-    // sound https://codewithchris.com/avaudioplayer-tutorial/
 }

@@ -13,8 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     let stateConroller = StateController()
     
+    //creating a database for the created data model
     lazy var persistentContainer: NSPersistentContainer = {
-//        PortfolioStockTransformer.register()
         let container = NSPersistentContainer(name: "DataModel")
         container.loadPersistentStores {
             (storeDescription, error) in
@@ -27,12 +27,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     lazy var managedObjectContext: NSManagedObjectContext = persistentContainer.viewContext
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
                 
+        //passing managedObjectContext and stateController to different tabs
         let tabBarController = window!.rootViewController as! UITabBarController
         if let tabBarControllers = tabBarController.viewControllers{
             var navController = tabBarControllers[0] as! UINavigationController

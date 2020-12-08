@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+//TableViewCell used in the tableView in InvestmentViewController to show one stock in user's portfolio
 class InvestmentCell: UITableViewCell {
     
     @IBOutlet weak var symbolLabel: UILabel!

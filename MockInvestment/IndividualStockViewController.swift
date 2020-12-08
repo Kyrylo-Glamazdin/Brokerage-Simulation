@@ -11,6 +11,7 @@ import CoreData
 
 class IndividualStockViewController: UIViewController {
     
+    //outlets
     @IBOutlet weak var stockSymbolLabel: UILabel!
     @IBOutlet weak var stockNameLabel: UILabel!
     @IBOutlet weak var stockPriceLabel: UILabel!
@@ -25,17 +26,22 @@ class IndividualStockViewController: UIViewController {
     
     var userAvailableBalances = [UserAvailableBalance]()
     var userPortfolios = [UserPortfolioState]()
+    
     var stockObj: AvailableStock!
     var dataTask: URLSessionDataTask?
     var managedObjectContext: NSManagedObjectContext!
-    var currentStockPrice: StockPriceObj?
-    var canPerformSellSegue: Bool = true
+    
+    var currentStockPrice: StockPriceObj? //determines object price
+    var canPerformSellSegue: Bool = true //false when user has no shares, true otherwise
+    
+    //stock price percentage changes
     var dailyChange: Double = 0
     var weeklyChange: Double = 0
     var monthlyChange: Double = 0
-    var canToggleSegmentedControl: Bool = false
     
-    let dispatchGroup = DispatchGroup()
+    var canToggleSegmentedControl: Bool = false //true when historical stock prices are loaded and segmentedControl can be toggled
+    
+    let dispatchGroup = DispatchGroup() //dispatchGroup is used to wait for all historical stock prices to get fetched
     
     override var prefersStatusBarHidden: Bool {
         return false
@@ -51,15 +57,20 @@ class IndividualStockViewController: UIViewController {
         sellButton.setTitle(String("Sell " + stockObj.stockSymbol), for: .normal)
         updateDataAndLabels()
         
+        //wait for historical stock prices to get fetched and allow segmentedControl to be toggled
         dispatchGroup.notify(queue: .main){
             self.canToggleSegmentedControl = true
         }
         
     }
     
+    //MARK: - Data fetches and label updates
+    
+    //when segmented control value changes, compute the price percentage change and update the labels
     @IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         if canToggleSegmentedControl {
             let segmentedControlValue = sender.selectedSegmentIndex
+            //daily price change
             if segmentedControlValue == 0 {
                 if let curPrice = self.currentStockPrice?.currentPrice {
                     let dailyPriceChange = curPrice - self.currentStockPrice!.previousClose
@@ -79,6 +90,7 @@ class IndividualStockViewController: UIViewController {
                 }
                 intervalLabel.text! = "(Today)"
             }
+            //weekly price change
             else if segmentedControlValue == 1 {
                 if let curPrice = self.currentStockPrice?.currentPrice {
                     let weeklyPercentageChange = (weeklyChange / curPrice) * 100
@@ -97,6 +109,7 @@ class IndividualStockViewController: UIViewController {
                 }
                 intervalLabel.text! = "(Week)"
             }
+            //monthly price change
             else if segmentedControlValue == 2 {
                 if let curPrice = self.currentStockPrice?.currentPrice {
                     let monthlyPercentageChange = (monthlyChange / curPrice) * 100
@@ -118,13 +131,16 @@ class IndividualStockViewController: UIViewController {
         }
     }
     
+    //update the whole view controller
     @objc func updateDataAndLabels() {
         getStockPrice()
         performDataFetch()
         callPercentageFetches()
     }
     
+    //fetch portfolio data from local database
     func performDataFetch(){
+        //fetch requests
         let fetchRequest1 = NSFetchRequest<UserAvailableBalance>()
         let fetchRequest2 = NSFetchRequest<UserPortfolioState>()
 
@@ -133,6 +149,7 @@ class IndividualStockViewController: UIViewController {
         let entity2 = UserPortfolioState.entity()
         fetchRequest2.entity = entity2
         
+        //sort by descending date
         let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
 
         fetchRequest1.sortDescriptors = [sortDescriptor]
@@ -146,6 +163,7 @@ class IndividualStockViewController: UIViewController {
             fatalError("Error: \(error)")
         }
         
+        //update the labels
         if userAvailableBalances.count == 0 {
             self.userBalanceLabel.text! = "$0.00"
         }
@@ -176,11 +194,15 @@ class IndividualStockViewController: UIViewController {
         }
     }
     
+    //get stock percentage change (1 week & 1 month)
     func callPercentageFetches() {
         getCandlePrices(resolution: 1)
         getCandlePrices(resolution: 2)
     }
     
+    //MARK: - Stock Price Fetches
+    
+    //url for fetching current stock price
     func stockPriceURL() -> URL {
         let urlStringFirstHalf = "https://finnhub.io/api/v1/quote?symbol="
         let stockSymbol = stockObj.stockSymbol
@@ -190,6 +212,7 @@ class IndividualStockViewController: UIViewController {
         return url!
     }
     
+    //parse stock price object
     func parse(data: Data) -> StockPriceObj {
         do {
             let decoder = JSONDecoder()
@@ -203,6 +226,7 @@ class IndividualStockViewController: UIViewController {
         }
     }
     
+    //get current stock price using finnhub.io API
     func getStockPrice(){
         let url = stockPriceURL()
         let session = URLSession.shared
@@ -214,6 +238,7 @@ class IndividualStockViewController: UIViewController {
                 httpResponse.statusCode == 200 {
                 if let data = data {
                     self.currentStockPrice = self.parse(data: data)
+                    //when stock price is fetched, compute price & percentage changes, update the labels
                     DispatchQueue.main.async {
                         self.stockPriceLabel.text! = "$" + String(format: "%.2f", self.currentStockPrice?.currentPrice ?? 0.00)
                         if let curPrice = self.currentStockPrice?.currentPrice {
@@ -243,6 +268,8 @@ class IndividualStockViewController: UIViewController {
         dataTask?.resume()
     }
     
+    //candles are used for historical stock prices
+    //if @resolution == 2, get monthly candle, otherwise get weekly candle
     func candlePriceURL(resolution: Int) -> URL {
         var resolutionChar = "5"
         let curDateTimestamp = Int(Date().timeIntervalSince1970)
@@ -262,6 +289,7 @@ class IndividualStockViewController: UIViewController {
         return url!
     }
     
+    //parse candle object
     func parseCandle(data: Data) -> Candle {
         do {
             let decoder = JSONDecoder()
@@ -275,6 +303,7 @@ class IndividualStockViewController: UIViewController {
         }
     }
     
+    //get stock candles from finnhub API
     func getCandlePrices(resolution: Int){
         dispatchGroup.enter()
         let url = candlePriceURL(resolution: resolution)
@@ -287,6 +316,7 @@ class IndividualStockViewController: UIViewController {
                 httpResponse.statusCode == 200 {
                 if let data = data {
                     let candle = self.parseCandle(data: data)
+                    //update object variables
                     DispatchQueue.main.async {
                         if resolution == 2 {
                             if self.currentStockPrice != nil {
@@ -310,6 +340,9 @@ class IndividualStockViewController: UIViewController {
         dataTask?.resume()
     }
     
+    //MARK: - Segue-related methods
+    
+    //SellStock segue must be disabled if the user doesn't have any shares of this stock
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "SellStock" {
             if userPortfolios.count == 0 {
@@ -334,9 +367,10 @@ class IndividualStockViewController: UIViewController {
                 return false
             }
         }
-        return true
+        return true //true if segue is other than "SellStock"
     }
     
+    //pass stock info to child controllers
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "BuyStock" {
             let controller = segue.destination as! BuyStockViewController

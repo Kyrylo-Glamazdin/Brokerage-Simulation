@@ -7,6 +7,8 @@
 
 import Foundation
 
+//A stock class used for saving the info about user portfolio
+//Each stock has a symbol, a name (or description), and quantity
 public class PortfolioStock: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool = true
     
@@ -30,12 +32,14 @@ public class PortfolioStock: NSObject, NSSecureCoding {
         super.init()
     }
     
+    //encode a stock object
     public func encode(with aCoder: NSCoder){
         aCoder.encode(symbol, forKey: Key.symbol.rawValue)
         aCoder.encode(name, forKey: Key.name.rawValue)
         aCoder.encode(quantity, forKey: Key.quantity.rawValue)
     }
     
+    //decode a stock object
     public required convenience init?(coder aDecoder: NSCoder){
         let mySymbol = aDecoder.decodeObject(forKey: Key.symbol.rawValue) as! String
         let myName = aDecoder.decodeObject(forKey: Key.name.rawValue) as! String

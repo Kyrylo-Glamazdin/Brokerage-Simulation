@@ -10,8 +10,11 @@ import UIKit
 import CoreData
 import AVFoundation
 
+//This class is responsible for processing the transactions that simulate selling stocks and adding them to user's portfolio.
+//@precondition: this view controller is only accessible if the user has shares of this stock in their portfolio
 class SellStockViewController: UIViewController {
     
+    //outlets
     @IBOutlet weak var sellSharesLabel: UILabel!
     @IBOutlet weak var marketPriceLabel: UILabel!
     @IBOutlet weak var userSharesLabel: UILabel!
@@ -22,10 +25,14 @@ class SellStockViewController: UIViewController {
     var managedObjectContext: NSManagedObjectContext!
     var stockObj: AvailableStock!
     var currentStockPrice: StockPriceObj?
+    
+    //vars for local database fetches
     var userAvailableBalances = [UserAvailableBalance]()
     var userInvestmentBalances = [UserInvestmentBalance]()
     var userPortfolios = [UserPortfolioState]()
+    
     var numOfSharesInPortfolio: Int = 0
+    //audio player to play the transaction completion sound
     var audioPlayer = AVAudioPlayer()
     
     override var prefersStatusBarHidden: Bool {
@@ -42,6 +49,7 @@ class SellStockViewController: UIViewController {
             marketPriceLabel.text! = "Market price: $0.00"
         }
 
+        //load sound into audio player
         let sound = Bundle.main.path(forResource: "CompleteSound", ofType: "caf")
         do {
             if sound != nil {
@@ -58,7 +66,9 @@ class SellStockViewController: UIViewController {
         }
     }
 
+    //fetch personal balance and portfolio data from local database
     func getPersonalFundsData() {
+        //create requests
         let fetchRequest1 = NSFetchRequest<UserAvailableBalance>()
         let fetchRequest2 = NSFetchRequest<UserInvestmentBalance>()
         let fetchRequest3 = NSFetchRequest<UserPortfolioState>()
@@ -70,11 +80,13 @@ class SellStockViewController: UIViewController {
         let entity3 = UserPortfolioState.entity()
         fetchRequest3.entity = entity3
 
+        //sort by date from newest to oldest
         let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
         fetchRequest1.sortDescriptors = [sortDescriptor]
         fetchRequest2.sortDescriptors = [sortDescriptor]
         fetchRequest3.sortDescriptors = [sortDescriptor]
 
+        //fetch data
         do {
             userAvailableBalances = try managedObjectContext.fetch(fetchRequest1)
             userInvestmentBalances = try managedObjectContext.fetch(fetchRequest2)
@@ -95,6 +107,8 @@ class SellStockViewController: UIViewController {
 
     }
     
+    //MARK: - Validate and process transaction
+    
     
     @IBAction func placeOrder(_ sender: Any) {
         if let enteredSharesAmount = Double(textField.text!) {
@@ -106,9 +120,11 @@ class SellStockViewController: UIViewController {
                 return
             }
             if currentStockPrice != nil {
+                //process the transaction if number of entered shares is valid
                 completeTransaction()
             }
             else {
+                //this indicates an API issue, most likely exceeding API call limit. Try again in a minute
                 errorLabel.text! = "Price error: Could not place your order"
                 afterDelay(5) {
                     self.errorLabel.text! = ""
@@ -123,6 +139,9 @@ class SellStockViewController: UIViewController {
         }
     }
     
+    //process the transaction
+    //@precondition: the number of entered shares is less than or equal to the number of shares in user's portfolio
+    //@precondition: user's portfolio is not empty
     func completeTransaction() {
         let date = Date()
         let enteredSharesAmount = Double(textField.text!)
@@ -134,16 +153,20 @@ class SellStockViewController: UIViewController {
 
         for stock in latestUserPortfolio.stocks {
             if stock.symbol == stockObj.symbol {
+                //do not add this stock into user's portfolio if user attempts to sell all shares of this stock
                 if Int(enteredSharesAmount!) == stock.quantity {
                     continue
                 }
                 else {
+                    //if the entered shares amount is less than the total amount of shares of this stock, subtract the entered amount from the total amount of shares.
                     let existingStock = stock
                     existingStock.quantity = existingStock.quantity - Int(enteredSharesAmount!)
+                    //append the updated stock object
                     userPortfolio.stocks.append(existingStock)
                 }
             }
             else {
+                //add all other shares to user's portfolio
                 userPortfolio.stocks.append(stock)
             }
         }
@@ -158,6 +181,7 @@ class SellStockViewController: UIViewController {
         availableBalance.date = date
         investmentBalance.date = date
 
+        //save the portfolio, show the animation, and play transaction completion sound
         do {
             try managedObjectContext.save()
             postCompletionNotification()
@@ -175,6 +199,7 @@ class SellStockViewController: UIViewController {
         }
     }
     
+    //when the entered amount of shares changes, modify the label showing the total transaction profit
     @IBAction func enteredNumberOfSharesDidChange(_ sender: Any) {
         if let enteredSharesAmount = Double(textField.text!) {
             let newTransactionPrice = enteredSharesAmount * (currentStockPrice?.currentPrice ?? 0)
@@ -190,6 +215,7 @@ class SellStockViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    //issue a notification indicating that the portfolio has been updated and other controllers must re-fetch data
     func postCompletionNotification() {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "StockTransactionCompleted"), object: nil)
     }

@@ -5,44 +5,62 @@
 //  Created by Kyrylo Glamazdin on 11/2/20.
 //
 
-//dispatch group: itnext.io/how-to-use-dispatchgroup-in-swift-4-2-similar-to-async-await-in-javascript-62a2ff04e51e
-
+// This is the main view of the application. It is showing the current state of user's portfolio, including their balances and purchased stocks
 import CoreData
 import UIKit
 
 class InvestmentsViewController: UIViewController {
     
+    //outlets to screen's components
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userInvestmentBalanceLabel: UILabel!
     @IBOutlet weak var userAvailableBalanceLabel: UILabel!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var userInvestmentBalancePercentageChangeLabel: UILabel!
+    
+    
     var managedObjectContext: NSManagedObjectContext!
     var dataTask: URLSessionDataTask?
-    var stateController: StateController!
+    var stateController: StateController! //state controller used for passing all of the available stocks to searchStocksViewController on a different tab
     
-    var currentInvestments = [Investment]()
+    var currentInvestments = [Investment]() // investments define the current state of user's portfolio (used in a tableView)
+    
+    //data from the local database
     var userTotalBalances = [UserTotalBalance]()
     var userTotalDepositBalances = [UserTotalDepositedBalance]()
     var userAvailableBalances = [UserAvailableBalance]()
     var userPortfolios = [UserPortfolioState]()
     var availableStocks = [AvailableStock]()
-    var portfolioStockPrices = [StockPriceObj]()
+    
+    var portfolioStockPrices = [StockPriceObj]() //prices of stocks in portfolio
     var stockPriceObjects = [StockPrice]()
-    var selectedStock: AvailableStock?
+    
+    var selectedStock: AvailableStock? //stock that has been selected in a tableView
+    
+    // strings to display in a userInvestmentBalancePercentageChangeLabel depending on the selected value of segmentedControl
     var dailyChange: String = "Loading..."
     var weeklyChange: String = "Loading..."
     var monthlyChange: String = "Loading..."
     var allTimeChange: String = "Loading..."
+    
+    //values of user's personal percentage changes for day, week, month, and all-time
     var dailyChangeVal: Double = 0
     var weeklyChangeVal: Double = 0
     var monthlyChangeVal: Double = 0
     var allTimeChangeVal: Double = 0
+    
+    // user portfolio net worth 1 day, 1 week, and 1 month ago
     var dailyChangeGroup = [Double]()
     var weeklyChangeGroup = [Double]()
     var monthlyChangeGroup = [Double]()
-    var userInvestmentBalanceTotal: Double = 0
-    var canToggleSegmentedControl: Bool = false
     
+    var userInvestmentBalanceTotal: Double = 0
+    var canToggleSegmentedControl: Bool = false // becomes true when historical prices are loaded
+    
+    let defaults = UserDefaults.standard //used for saving the previous segmentedControl selection
+    var selectedPercentageChangeSegment = 0
+    
+    // dispatch groups that notify when each task in them finished executing (used for multiple API calls)
     let dispatchGroup = DispatchGroup()
     let dispatchGroup2 = DispatchGroup()
     
@@ -61,33 +79,42 @@ class InvestmentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //listen for the notifications to complete further updates (when app state changes or finishes loading the API data)
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateDataAndLabels), name: Notification.Name(rawValue: "StockTransactionCompleted"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getPersonalPercentageChanges), name: Notification.Name(rawValue: "BalanceComputationCompleted"), object: nil)
         
-        updateDataAndLabels()
+        updateDataAndLabels() //fetch and display portfolio data
         userInvestmentBalanceLabel.text! = "Loading..."
         
-        //tableView.reloadData()
-        
+
+        //register custom cells
         var cellNib = UINib(nibName: TableView.CellIdentifiers.investmentCell, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: TableView.CellIdentifiers.investmentCell)
         cellNib = UINib(nibName: TableView.CellIdentifiers.noInvestmentsCell, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: TableView.CellIdentifiers.noInvestmentsCell)
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
         
+        selectedPercentageChangeSegment = defaults.integer(forKey: "selectedSegment")
+        segmentedControl.selectedSegmentIndex = 0
+        
+        //updating the labels and tableView after API calls
         dispatchGroup.notify(queue: .main){
             self.tableView.reloadData()
             self.updateInvestmentLabel()
         }
     }
     
+    // MARK: - Data Fetches
+    
+    //fetches and displays portfolio data
     @objc func updateDataAndLabels() {
         performDataFetch()
         performStockSymbolFetch()
         fetchPrices()
     }
     
+    //loads data from the local database
     func performDataFetch(){
         let fetchRequest1 = NSFetchRequest<UserTotalBalance>()
         let fetchRequest2 = NSFetchRequest<UserTotalDepositedBalance>()
@@ -103,7 +130,7 @@ class InvestmentsViewController: UIViewController {
         let entity4 = UserPortfolioState.entity()
         fetchRequest4.entity = entity4
         
-        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false) //sort by descending date
         fetchRequest1.sortDescriptors = [sortDescriptor]
         fetchRequest2.sortDescriptors = [sortDescriptor]
         fetchRequest3.sortDescriptors = [sortDescriptor]
@@ -126,6 +153,7 @@ class InvestmentsViewController: UIViewController {
             self.userAvailableBalanceLabel.text! = "$" + String(format: "%.2f", userAvailableBalances[0].availableBalance)
         }
         
+        //display portfolio stocks in the tableView
         currentInvestments = []
         if userPortfolios.count != 0 {
             for stock in userPortfolios[0].stocks {
@@ -140,6 +168,7 @@ class InvestmentsViewController: UIViewController {
         tableView.reloadData()
     }
     
+    //fetch current prices for each stock in the portfolio
     func fetchPrices() {
         stockPriceObjects = []
         portfolioStockPrices = []
@@ -148,12 +177,14 @@ class InvestmentsViewController: UIViewController {
         }
     }
     
+    //url to the endpoint for getting all supported stocks
     func finnhubURL() -> URL {
         let urlString = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=API_KEY"
         let url = URL(string: urlString)
         return url!
     }
     
+    //parsing all supported stocks
     func parse(data: Data) -> [AvailableStock] {
         do {
             let decoder = JSONDecoder()
@@ -166,6 +197,7 @@ class InvestmentsViewController: UIViewController {
         }
     }
     
+    //fetching all the stocks that are supported by finnhub.io API service
     func performStockSymbolFetch(){
         let url = finnhubURL()
         let session = URLSession.shared
@@ -189,6 +221,7 @@ class InvestmentsViewController: UIViewController {
         dataTask?.resume()
     }
     
+    //url for the endpoint providing current stock prices
     func stockPriceURL(stockSymbol: String) -> URL {
         let urlStringFirstHalf = "https://finnhub.io/api/v1/quote?symbol="
         let stockSymbol = stockSymbol
@@ -198,6 +231,7 @@ class InvestmentsViewController: UIViewController {
         return url!
     }
     
+    //parsing stockPrice objects
     func parseStockPrice(data: Data) -> StockPriceObj {
         do {
             let decoder = JSONDecoder()
@@ -211,29 +245,9 @@ class InvestmentsViewController: UIViewController {
         }
     }
     
-    func updateInvestmentLabel() {
-        var userAvailableBalance: Double = 0
-        if userAvailableBalances.count > 0 {
-            userAvailableBalance = userAvailableBalances[0].availableBalance
-        }
-        var totalStockPrices: Double = 0
-        for stock in currentInvestments {
-            let thisStockShares = stock.shares
-            for stockPriceObject in stockPriceObjects {
-                if stockPriceObject.symbol == stock.symbol {
-                    totalStockPrices = totalStockPrices + Double(stockPriceObject.price * Double(thisStockShares))
-                    break
-                }
-            }
-        }
-        let userTotalInvestmentBalance = totalStockPrices + userAvailableBalance
-        userInvestmentBalanceTotal = userTotalInvestmentBalance
-        userInvestmentBalanceLabel.text! = "$" + String(format: "%.2f", userTotalInvestmentBalance)
-        postBalanceFetchedNotification()
-    }
-    
+    //fetching stock prices
     func getStockPrice(stockSymbol: String, indexInCurrentInvestments: Int){
-        dispatchGroup.enter()
+        dispatchGroup.enter() //use dispatch group to await for all stock prices to finish fetching
         let url = stockPriceURL(stockSymbol: stockSymbol)
         let session = URLSession.shared
         dataTask = session.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -267,15 +281,17 @@ class InvestmentsViewController: UIViewController {
         dataTask?.resume()
     }
     
+    //url for the endpoint to get the candle prices (for historical price data)
+    //@resolution defines which time interval to fetch
     func candlePriceURL(resolution: Int, stockSymbol: String) -> URL {
         var resolutionChar = "5"
         let curDateTimestamp = Int(Date().timeIntervalSince1970)
-        var pastDateTimestamp = curDateTimestamp - 604800
+        var pastDateTimestamp = curDateTimestamp - 604800 // 1 week ago
         if resolution == 2 {
             resolutionChar = "30"
-            pastDateTimestamp = curDateTimestamp - 2592000
+            pastDateTimestamp = curDateTimestamp - 2592000 // 1 month ago
         }
-        // using same for day change as for week change due to API inconsistency
+        // using same for day change as for week change due to API inconsistency (use a different value later)
         else if resolution == 0 {
             resolutionChar = "5"
             pastDateTimestamp = curDateTimestamp - 604800
@@ -291,6 +307,7 @@ class InvestmentsViewController: UIViewController {
         return url!
     }
     
+    //parse candle data objects
     func parseCandle(data: Data) -> Candle {
         do {
             let decoder = JSONDecoder()
@@ -304,6 +321,46 @@ class InvestmentsViewController: UIViewController {
         }
     }
     
+    //fetch historical prices of the stock (in a form of candle data)
+    //append to the correct array based on the @resolution provided
+    func getCandlePrice(resolution: Int, stockSymbol: String, quantity: Int){
+        dispatchGroup2.enter()
+        let url = candlePriceURL(resolution: resolution, stockSymbol: stockSymbol)
+        let session = URLSession.shared
+        dataTask = session.dataTask(with: url, completionHandler: { (data, response, error) in
+            if let error = error as NSError? {
+                print(error)
+            }
+            else if let httpResponse = response as? HTTPURLResponse,
+                httpResponse.statusCode == 200 {
+                if let data = data {
+                    let candle = self.parseCandle(data: data)
+                    if candle.status != "no_data"{
+                        if resolution == 2 {
+                            self.monthlyChangeGroup.append(candle.openPrice * Double(quantity))
+                        }
+                        else if resolution == 1{
+                            self.weeklyChangeGroup.append(candle.openPrice * Double(quantity))
+                        }
+                        else {
+                            self.dailyChangeGroup.append(candle.specialOpenPrice * Double(quantity))
+                        }
+                        self.dispatchGroup2.leave()
+                        return
+                    }
+                }
+            }
+            else {
+                print("Error!")
+            }
+        })
+        dataTask?.resume()
+    }
+    
+    //MARK: - Updating labels using fetched data
+    
+    //computes user's personal percentages for the portfolio's net worth.
+    //fetches the user's portfolio at that point in time (1 day, 1 week, and 1 month ago), and gets historical stock prices as well as available balances
     @objc func getPersonalPercentageChanges() {
         dailyChangeGroup = []
         weeklyChangeGroup = []
@@ -315,6 +372,7 @@ class InvestmentsViewController: UIViewController {
         var oneWeekAgoInvestments: [PortfolioStock] = []
         var oneMonthAgoInvestments: [PortfolioStock] = []
         
+        //get user's available balances for 1 day, week, month ago
         if userAvailableBalances.count > 0 {
             if Int(userAvailableBalances[0].date.timeIntervalSince1970) < oneDayToThePast {
                 dailyChangeGroup.append(userAvailableBalances[0].availableBalance)
@@ -362,7 +420,7 @@ class InvestmentsViewController: UIViewController {
             }
         }
         
-        
+        //get stocks in user's potfolio for 1 day, week, and month ago
         if userPortfolios.count > 0 {
             if Int(userPortfolios[0].date.timeIntervalSince1970) < oneDayToThePast {
                 oneDayAgoInvestments = userPortfolios[0].stocks
@@ -409,7 +467,7 @@ class InvestmentsViewController: UIViewController {
                 }
             }
             
-
+            //fetch historical prices for each stock that was in user's portfolio in particular points in time
             for investment in oneDayAgoInvestments {
                 getCandlePrice(resolution: 0, stockSymbol: investment.symbol, quantity: investment.quantity)
             }
@@ -427,6 +485,7 @@ class InvestmentsViewController: UIViewController {
             self.weeklyChange = "0.00% ($0.00)"
             self.monthlyChange = "0.00% ($0.00)"
         }
+        //compute all time net worth change
         var latestTotalDeposit: Double = 1
         if userTotalDepositBalances.count > 0 {
             latestTotalDeposit = userTotalDepositBalances[0].totalDepositedBalance
@@ -444,16 +503,17 @@ class InvestmentsViewController: UIViewController {
             self.allTimeChange = "0.00% ($0.00)"
         }
         
-        
-        userInvestmentBalancePercentageChangeLabel.text! = dailyChange
-        
+        //await for the api calls and finish updating the labels
         dispatchGroup2.notify(queue: .main) {
             self.finishUpdatingPercentageLabels()
         }
     }
     
+    //gets called when the historical prices are fetched
+    //updates the labels accordingly
     func finishUpdatingPercentageLabels() {
         
+        //compute 1 day change
         var currentInvestmentSum: Double = 0
         if dailyChangeGroup.count > 0 {
             for price in dailyChangeGroup {
@@ -474,7 +534,7 @@ class InvestmentsViewController: UIViewController {
             self.dailyChange = "0.00% ($0.00)"
         }
         
-        
+        //compute 1 week change
         currentInvestmentSum = 0
         if weeklyChangeGroup.count > 0 {
             for price in weeklyChangeGroup {
@@ -494,7 +554,7 @@ class InvestmentsViewController: UIViewController {
             self.weeklyChange = "0.00% ($0.00)"
         }
         
-        
+        //compute 1 month change
         currentInvestmentSum = 0
         if monthlyChangeGroup.count > 0 {
             for price in monthlyChangeGroup {
@@ -514,55 +574,79 @@ class InvestmentsViewController: UIViewController {
             self.monthlyChange = "0.00% ($0.00)"
         }
         
-        userInvestmentBalancePercentageChangeLabel.text! = dailyChange
-        if dailyChangeVal < 0 {
-            userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
-        }
-        else {
-            userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
-        }
         canToggleSegmentedControl = true
-    }
-    
-    func getCandlePrice(resolution: Int, stockSymbol: String, quantity: Int){
-        dispatchGroup2.enter()
-        let url = candlePriceURL(resolution: resolution, stockSymbol: stockSymbol)
-        let session = URLSession.shared
-        dataTask = session.dataTask(with: url, completionHandler: { (data, response, error) in
-            if let error = error as NSError? {
-                print(error)
-            }
-            else if let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode == 200 {
-                if let data = data {
-                    let candle = self.parseCandle(data: data)
-                    if candle.status != "no_data"{
-                        if resolution == 2 {
-                            self.monthlyChangeGroup.append(candle.openPrice * Double(quantity))
-                        }
-                        else if resolution == 1{
-                            self.weeklyChangeGroup.append(candle.openPrice * Double(quantity))
-                        }
-                        else {
-                            self.dailyChangeGroup.append(candle.specialOpenPrice * Double(quantity))
-                        }
-                        self.dispatchGroup2.leave()
-                        return
-                    }
-                }
+        
+        //set personal percentage change label to the value corresponding to the index of segmentedControl set in userDefaults
+        segmentedControl.selectedSegmentIndex = selectedPercentageChangeSegment
+        
+        let segmentedControlValue = selectedPercentageChangeSegment
+        if segmentedControlValue == 0 {
+            userInvestmentBalancePercentageChangeLabel.text! = dailyChange
+            if dailyChangeVal < 0 {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
             }
             else {
-                print("Error!")
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
             }
-        })
-        dataTask?.resume()
+        }
+        else if segmentedControlValue == 1 {
+            userInvestmentBalancePercentageChangeLabel.text! = weeklyChange
+            if weeklyChangeVal < 0 {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
+            }
+            else {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
+            }
+        }
+        else if segmentedControlValue == 2 {
+            userInvestmentBalancePercentageChangeLabel.text! = monthlyChange
+            if monthlyChangeVal < 0 {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
+            }
+            else {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
+            }
+        }
+        else {
+            userInvestmentBalancePercentageChangeLabel.text! = allTimeChange
+            if allTimeChangeVal < 0 {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor.red
+            }
+            else {
+                userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
+            }
+        }
+        
     }
     
+    // update the label that shows the total balance of the user's portfolio using current stock prices and available balance
+    func updateInvestmentLabel() {
+        var userAvailableBalance: Double = 0
+        if userAvailableBalances.count > 0 {
+            userAvailableBalance = userAvailableBalances[0].availableBalance
+        }
+        var totalStockPrices: Double = 0
+        for stock in currentInvestments {
+            let thisStockShares = stock.shares
+            for stockPriceObject in stockPriceObjects {
+                if stockPriceObject.symbol == stock.symbol {
+                    totalStockPrices = totalStockPrices + Double(stockPriceObject.price * Double(thisStockShares))
+                    break
+                }
+            }
+        }
+        let userTotalInvestmentBalance = totalStockPrices + userAvailableBalance
+        userInvestmentBalanceTotal = userTotalInvestmentBalance
+        userInvestmentBalanceLabel.text! = "$" + String(format: "%.2f", userTotalInvestmentBalance)
+        postBalanceFetchedNotification()
+    }
+    
+    //post a notification signifying the completion of balance computation
     func postBalanceFetchedNotification() {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "BalanceComputationCompleted"), object: nil)
     }
     
-    
+    //display the percentage change corresponding to the selected segmentedControl segment
     @IBAction func priceChangeSegmentChanged(_ sender: UISegmentedControl) {
         if canToggleSegmentedControl {
             let segmentedControlValue = sender.selectedSegmentIndex
@@ -574,6 +658,7 @@ class InvestmentsViewController: UIViewController {
                 else {
                     userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
                 }
+                defaults.set(0, forKey: "selectedSegment")
             }
             else if segmentedControlValue == 1 {
                 userInvestmentBalancePercentageChangeLabel.text! = weeklyChange
@@ -583,6 +668,7 @@ class InvestmentsViewController: UIViewController {
                 else {
                     userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
                 }
+                defaults.set(1, forKey: "selectedSegment")
             }
             else if segmentedControlValue == 2 {
                 userInvestmentBalancePercentageChangeLabel.text! = monthlyChange
@@ -592,6 +678,7 @@ class InvestmentsViewController: UIViewController {
                 else {
                     userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
                 }
+                defaults.set(2, forKey: "selectedSegment")
             }
             else {
                 userInvestmentBalancePercentageChangeLabel.text! = allTimeChange
@@ -601,10 +688,14 @@ class InvestmentsViewController: UIViewController {
                 else {
                     userInvestmentBalancePercentageChangeLabel.textColor = UIColor(red: 0, green: 178/255, blue: 8/255, alpha: 1)
                 }
+                defaults.set(3, forKey: "selectedSegment")
             }
         }
     }
     
+    //MARK: - Helper Methods
+    
+    //hide and show the nav bar
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
@@ -615,6 +706,7 @@ class InvestmentsViewController: UIViewController {
         navigationController?.isNavigationBarHidden = false
     }
     
+    //prepare the controllers for segue (pass managedObjectContext & other significalnt variables)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DepositFunds" {
             let controller = segue.destination as! DepositFundsViewController
@@ -631,7 +723,10 @@ class InvestmentsViewController: UIViewController {
     }
 }
 
+//MARK: - TableView delegate methods
+
 extension InvestmentsViewController: UITableViewDelegate, UITableViewDataSource {
+    //returns the number of table cells that tablreView has to display
     func tableView (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         if currentInvestments.count == 0 {
             return 1
@@ -640,6 +735,8 @@ extension InvestmentsViewController: UITableViewDelegate, UITableViewDataSource 
             return currentInvestments.count
         }
     }
+    
+    //set the value of each tableView cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = tableView.dequeueReusableCell(withIdentifier: TableView.CellIdentifiers.noInvestmentsCell, for: indexPath)
         if currentInvestments.count == 0 {
@@ -664,6 +761,7 @@ extension InvestmentsViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
     
+    // perform a segue when the user selects a tableView cell
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if currentInvestments.count > 0 {
             let selectedInvestmentSymbol = currentInvestments[indexPath.row].symbol
@@ -685,8 +783,10 @@ extension InvestmentsViewController: UITableViewDelegate, UITableViewDataSource 
     }
  }
 
+//MARK: - DepositFundsViewController delegate method
+
+//update the data when funds were added
 extension InvestmentsViewController: DepositFundsViewControllerDelegate {
-    
     func transactionComplete(sender: DepositFundsViewController) {
         self.updateDataAndLabels()
         dispatchGroup.notify(queue: .main){
@@ -695,5 +795,3 @@ extension InvestmentsViewController: DepositFundsViewControllerDelegate {
         }
     }
 }
-
-// delegate protocol tutorial https://useyourloaf.com/blog/quick-guide-to-swift-delegates/
