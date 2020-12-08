@@ -34,10 +34,6 @@ class SellStockViewController: UIViewController {
     var numOfSharesInPortfolio: Int = 0
     //audio player to play the transaction completion sound
     var audioPlayer = AVAudioPlayer()
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -37,9 +37,6 @@ class BuyStockViewController: UIViewController {
     
     var audioPlayer = AVAudioPlayer() //audio player to play the transaction sound
     
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

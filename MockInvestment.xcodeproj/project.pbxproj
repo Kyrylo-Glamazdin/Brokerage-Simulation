@@ -22,6 +22,7 @@
 		DC2B84B825604CE700F2B6EE /* PortfolioStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B84B725604CE700F2B6EE /* PortfolioStock.swift */; };
 		DC48846F25758626005F68EB /* NoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC48846E25758626005F68EB /* NoResultsCell.xib */; };
 		DC50ADA82551C9930081682A /* DepositFundsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC50ADA72551C9930081682A /* DepositFundsViewController.swift */; };
+		DC51F563257FF71000794C68 /* Finnhub-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC51F562257FF71000794C68 /* Finnhub-Info.plist */; };
 		DC71233B2557410C00AF4593 /* SearchStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC71233A2557410C00AF4593 /* SearchStocksViewController.swift */; };
 		DC71233E255751E600AF4593 /* AvailableStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC71233D255751E600AF4593 /* AvailableStock.swift */; };
 		DC7ED7E12575C9EA0052E6FD /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7ED7E02575C9EA0052E6FD /* HudView.swift */; };
@@ -60,6 +61,7 @@
 		DC2B84B725604CE700F2B6EE /* PortfolioStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioStock.swift; sourceTree = "<group>"; };
 		DC48846E25758626005F68EB /* NoResultsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultsCell.xib; sourceTree = "<group>"; };
 		DC50ADA72551C9930081682A /* DepositFundsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFundsViewController.swift; sourceTree = "<group>"; };
+		DC51F562257FF71000794C68 /* Finnhub-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Finnhub-Info.plist"; sourceTree = "<group>"; };
 		DC71233A2557410C00AF4593 /* SearchStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStocksViewController.swift; sourceTree = "<group>"; };
 		DC71233D255751E600AF4593 /* AvailableStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableStock.swift; sourceTree = "<group>"; };
 		DC7ED7E02575C9EA0052E6FD /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				DCBAE6972570192900449B9E /* Candle.swift */,
 				DC48846E25758626005F68EB /* NoResultsCell.xib */,
 				DC7ED7E02575C9EA0052E6FD /* HudView.swift */,
+				DC51F562257FF71000794C68 /* Finnhub-Info.plist */,
 			);
 			path = MockInvestment;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				DCADDA23255064C900B3507C /* Assets.xcassets in Resources */,
 				DCADDA21255064C600B3507C /* Main.storyboard in Resources */,
 				DCE8527E2576BB0400168026 /* CompleteSound.caf in Resources */,
+				DC51F563257FF71000794C68 /* Finnhub-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

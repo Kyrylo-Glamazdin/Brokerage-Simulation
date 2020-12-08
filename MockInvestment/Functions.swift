@@ -19,3 +19,19 @@ let applicationDocumentsDirectory: URL = {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return paths[0]
 }()
+
+var apiKey: String {
+    get {
+        guard let filePath = Bundle.main.path(forResource: "Finnhub-Info", ofType: "plist")
+        else {
+            fatalError("Couldn't find file 'Finnhub-plist'.")
+        }
+        
+        let plist = NSDictionary(contentsOfFile: filePath)
+        guard let keyValue = plist?.object(forKey: "API_KEY") as? String
+        else {
+            fatalError("Couldn't find key 'API_KEY' in 'Finnhub-Info.plist'.")
+        }
+        return keyValue
+    }
+}

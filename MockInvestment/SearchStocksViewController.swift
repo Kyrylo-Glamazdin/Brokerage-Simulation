@@ -29,10 +29,6 @@ class SearchStocksViewController: UIViewController {
     //managedObjectContext will not be used in this ViewController but would be passed down to IndividualStockViewController
     var managedObjectContext: NSManagedObjectContext!
 
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         afterDelay(0.6){
@@ -51,6 +47,7 @@ class SearchStocksViewController: UIViewController {
             performLocalStockSearch()
         }
     }
+    
     
     //performs stock search based on the user search input using substrings
     //due to the absence of an API endpoint that would allow to query the stocks, the stocks are queried locally after downloading the supporting data in InvestmentsViewController and passed through the StateController

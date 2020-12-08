@@ -179,7 +179,7 @@ class InvestmentsViewController: UIViewController {
     
     //url to the endpoint for getting all supported stocks
     func finnhubURL() -> URL {
-        let urlString = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=API_KEY"
+        let urlString = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=" + apiKey
         let url = URL(string: urlString)
         return url!
     }
@@ -225,7 +225,7 @@ class InvestmentsViewController: UIViewController {
     func stockPriceURL(stockSymbol: String) -> URL {
         let urlStringFirstHalf = "https://finnhub.io/api/v1/quote?symbol="
         let stockSymbol = stockSymbol
-        let urlStringSecondHalf = "&token=API_KEY"
+        let urlStringSecondHalf = "&token=" + apiKey
         let fullURL = urlStringFirstHalf + stockSymbol + urlStringSecondHalf
         let url = URL(string: fullURL)
         return url!
@@ -301,7 +301,7 @@ class InvestmentsViewController: UIViewController {
         let urlStringResolution = "&resolution="
         let urlStringFrom = "&from="
         let urlStringTo = "&to="
-        let urlStringToken = "&token=API_KEY"
+        let urlStringToken = "&token=" + apiKey
         let fullURL = urlStringSymbol + stockSymbol + urlStringResolution + resolutionChar + urlStringFrom + String(pastDateTimestamp) + urlStringTo + String(curDateTimestamp) + urlStringToken
         let url = URL(string: fullURL)
         return url!

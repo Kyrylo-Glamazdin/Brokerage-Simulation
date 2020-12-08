@@ -43,10 +43,6 @@ class IndividualStockViewController: UIViewController {
     
     let dispatchGroup = DispatchGroup() //dispatchGroup is used to wait for all historical stock prices to get fetched
     
-    override var prefersStatusBarHidden: Bool {
-        return false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,7 +57,6 @@ class IndividualStockViewController: UIViewController {
         dispatchGroup.notify(queue: .main){
             self.canToggleSegmentedControl = true
         }
-        
     }
     
     //MARK: - Data fetches and label updates
@@ -206,7 +201,7 @@ class IndividualStockViewController: UIViewController {
     func stockPriceURL() -> URL {
         let urlStringFirstHalf = "https://finnhub.io/api/v1/quote?symbol="
         let stockSymbol = stockObj.stockSymbol
-        let urlStringSecondHalf = "&token=API_KEY"
+        let urlStringSecondHalf = "&token=" + apiKey
         let fullURL = urlStringFirstHalf + stockSymbol + urlStringSecondHalf
         let url = URL(string: fullURL)
         return url!
@@ -283,7 +278,7 @@ class IndividualStockViewController: UIViewController {
         let urlStringResolution = "&resolution="
         let urlStringFrom = "&from="
         let urlStringTo = "&to="
-        let urlStringToken = "&token=API_KEY"
+        let urlStringToken = "&token=" + apiKey
         let fullURL = urlStringSymbol + stockSymbol + urlStringResolution + resolutionChar + urlStringFrom + String(pastDateTimestamp) + urlStringTo + String(curDateTimestamp) + urlStringToken
         let url = URL(string: fullURL)
         return url!
@@ -386,8 +381,8 @@ class IndividualStockViewController: UIViewController {
         }
     }
     
-    @IBAction func back() {
-        navigationController?.popViewController(animated: true)
-    }
+//    @IBAction func back() {
+//        navigationController?.popViewController(animated: true)
+//    }
     
 }
