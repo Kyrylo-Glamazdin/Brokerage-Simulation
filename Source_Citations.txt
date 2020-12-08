@@ -31,3 +31,5 @@ Setting title of a UIButton: https://developer.apple.com/documentation/uikit/uib
 Looping through an array using indexes: https://stackoverflow.com/questions/24028421/how-to-iterate-a-loop-with-index-and-element-in-swift
 
 Passing data between tabs using StateController: https://matteomanferdini.com/how-ios-view-controllers-communicate-with-each-other/
+
+Reading API Key from a separate file: https://peterfriese.dev/reading-api-keys-from-plist-files/
