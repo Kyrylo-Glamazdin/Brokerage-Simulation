@@ -16,4 +16,4 @@ This project is a simulation of the basic functionality of an online stock broke
 API_KEY
 `
  and the value to your API key from [Finnhub.io](https://finnhub.io/).
- * 4) Run the app either using iOS simulation or by connecting your actual iOS device via USB.
+ * 4) Run the app either using iOS simulation or by connecting your actual iOS device with a USB cable.
